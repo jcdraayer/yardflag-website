@@ -172,11 +172,11 @@
       background: #1b1f23;
       overflow: hidden;
     }
-    .video-wrap video {
+    .video-wrap video,
+    .video-wrap iframe {
       width: 100%;
       height: 100%;
       display: block;
-      object-fit: contain;
     }
     .video-figure figcaption {
       font-family: 'Newsreader', serif;
@@ -391,17 +391,13 @@
     <div class="video-grid">
       <figure class="video-figure">
         <div class="video-wrap">
-          <video controls preload="metadata">
-            <source src="assets/For%20a%20Smoke%20-%20Rails%20End.mov">
-          </video>
+          <iframe src="https://www.youtube.com/embed/KgkNFzpce7Q" title="For a Smoke — Live at Rails End" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
         <figcaption>Live at Rails End — <em>For a Smoke</em></figcaption>
       </figure>
       <figure class="video-figure">
         <div class="video-wrap">
-          <video controls preload="metadata">
-            <source src="assets/Hello%20from%20the%20Floor%20-%20Rails%20End.mov">
-          </video>
+          <iframe src="https://www.youtube.com/embed/k3PdZ_I0E_k" title="Hello from the Floor — Live at Rails End" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
         <figcaption>Live at Rails End — <em>Hello from the Floor</em></figcaption>
       </figure>
