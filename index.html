@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YardFlag</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; }
+    ::selection { background: #A65E42; color: #E4DCCB; }
+
+    :root {
+      --paper:   #E4DCCB;
+      --paper2:  #D8CEBA;
+      --ink:     #26221C;
+      --inksoft: #6B6253;
+      --rust:    #A65E42;
+      --ochre:   #B0894B;
+      --denim:   #6E8088;
+    }
+
+    /* ── Grain overlay ── */
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 60;
+      mix-blend-mode: multiply;
+      opacity: 0.4;
+      background-image: url('data:image/svg+xml,%3Csvg xmlns%3D%22http%3A//www.w3.org/2000/svg%22 width%3D%22220%22 height%3D%22220%22%3E%3Cfilter id%3D%22n%22%3E%3CfeTurbulence type%3D%22fractalNoise%22 baseFrequency%3D%220.8%22 numOctaves%3D%222%22 stitchTiles%3D%22stitch%22/%3E%3C/filter%3E%3Crect width%3D%22100%25%22 height%3D%22100%25%22 filter%3D%22url(%23n)%22 opacity%3D%220.3%22/%3E%3C/svg%3E');
+    }
+
+    /* ── Nav ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px clamp(20px, 5vw, 68px);
+      background: var(--paper);
+      border-bottom: 1px solid rgba(38,34,28,0.14);
+    }
+    .site-logo {
+      font-family: 'Newsreader', Georgia, serif;
+      font-weight: 500;
+      font-size: 19px;
+      letter-spacing: 0.01em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .site-nav {
+      display: flex;
+      gap: clamp(16px, 3vw, 38px);
+      align-items: center;
+    }
+    .site-nav a {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--inksoft);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .site-nav a:hover { color: var(--ink); }
+    .site-nav a.nav-cta { color: var(--rust); }
+    .site-nav a.nav-cta:hover { color: var(--ochre); }
+
+    /* ── Section heading row ── */
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+      margin-bottom: clamp(40px, 5vw, 64px);
+    }
+    .section-number {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(15px, 1.6vw, 18px);
+      color: var(--rust);
+    }
+    .section-title {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      font-size: clamp(36px, 6vw, 72px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin: 0;
+      color: var(--ink);
+    }
+    .section-rule {
+      flex: 1;
+      height: 1px;
+      background: rgba(38,34,28,0.18);
+      transform: translateY(-12px);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      min-height: calc(100vh - 63px);
+      display: flex;
+      align-items: flex-end;
+      background-color: #171b1f;
+      background-image: url('assets/hero-flatirons.png');
+      background-size: cover;
+      background-position: center 38%;
+      overflow: hidden;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15,18,21,0.9) 0%, rgba(15,18,21,0.3) 42%, rgba(15,18,21,0.05) 100%);
+    }
+    .hero-content {
+      position: relative;
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: clamp(40px, 8vw, 96px) clamp(24px, 6vw, 68px);
+    }
+    .hero-title {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      font-size: clamp(64px, 15vw, 200px);
+      line-height: 0.9;
+      letter-spacing: -0.025em;
+      margin: 0;
+      color: #EDE6D7;
+      text-wrap: balance;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: clamp(28px, 4vw, 40px);
+      font-family: 'Newsreader', serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #EDE6D7;
+      text-decoration: none;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(237,230,215,0.5);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .hero-cta:hover { color: #C9A07F; border-color: #C9A07F; }
+
+    /* ── Live section ── */
+    .section-live {
+      padding: clamp(72px, 10vw, 140px) clamp(24px, 6vw, 68px);
+      background: var(--paper);
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: clamp(22px, 3vw, 40px);
+    }
+    .video-figure { margin: 0; }
+    .video-wrap {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: #1b1f23;
+      overflow: hidden;
+    }
+    .video-wrap video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+    }
+    .video-figure figcaption {
+      font-family: 'Newsreader', serif;
+      font-size: 16px;
+      font-weight: 400;
+      margin-top: 16px;
+      color: var(--ink);
+    }
+
+    /* ── Photos section ── */
+    .section-photos {
+      padding: clamp(72px, 10vw, 140px) clamp(24px, 6vw, 68px);
+      background: var(--paper2);
+    }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: clamp(14px, 2vw, 22px);
+    }
+    .photo-img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+    }
+
+    /* ── About section ── */
+    .section-about {
+      padding: clamp(72px, 10vw, 140px) clamp(24px, 6vw, 68px);
+      background: var(--paper);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: minmax(240px, 0.8fr) 1.35fr;
+      gap: clamp(28px, 5vw, 72px);
+      align-items: start;
+    }
+    .about-portrait {
+      display: block;
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+    }
+    .about-lead {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(20px, 2.1vw, 28px);
+      font-weight: 300;
+      line-height: 1.55;
+      color: var(--ink);
+      margin: 0 0 26px;
+      text-wrap: pretty;
+    }
+    .about-body {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(15px, 1.4vw, 18px);
+      line-height: 1.75;
+      color: var(--inksoft);
+      margin: 0 0 30px;
+      text-wrap: pretty;
+    }
+    .about-quote {
+      margin: 0;
+      padding-left: 24px;
+      border-left: 2px solid var(--rust);
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(20px, 2vw, 27px);
+      line-height: 1.45;
+      color: var(--ink);
+    }
+
+    /* ── Contact / Listen section ── */
+    .section-contact {
+      padding: clamp(80px, 11vw, 160px) clamp(24px, 6vw, 68px);
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .contact-inner {
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .contact-eyebrow {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-size: clamp(14px, 1.6vw, 17px);
+      letter-spacing: 0.04em;
+      color: var(--ochre);
+      margin-bottom: 22px;
+    }
+    .contact-heading {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      font-size: clamp(44px, 9vw, 104px);
+      line-height: 0.92;
+      letter-spacing: -0.025em;
+      margin: 0 0 clamp(30px, 4vw, 44px);
+      color: var(--paper);
+    }
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Newsreader', serif;
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 300;
+      color: var(--paper);
+      text-decoration: none;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(228,220,203,0.4);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .contact-email:hover { color: var(--ochre); border-color: var(--ochre); }
+
+    .listen-divider {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      max-width: 440px;
+      margin: clamp(48px, 6vw, 68px) auto clamp(28px, 3vw, 34px);
+    }
+    .listen-divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--paper);
+      opacity: 0.25;
+    }
+    .listen-divider-label {
+      font-family: 'Newsreader', serif;
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      color: var(--paper);
+    }
+
+    .platform-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    .platform-link {
+      padding: 12px 26px;
+      border: 1px solid rgba(228,220,203,0.55);
+      color: var(--paper);
+      font-family: 'Newsreader', serif;
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .platform-link:hover { background: var(--paper); color: var(--ink); }
+    .platform-link.dim { border-color: rgba(228,220,203,0.4); opacity: 0.6; }
+    .platform-link.dim:hover { opacity: 1; background: transparent; color: var(--paper); }
+
+    .footer-copy {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--paper);
+      opacity: 0.4;
+      margin: clamp(52px, 7vw, 76px) 0 0;
+    }
+
+    /* ── Responsive: stack about grid on narrow screens ── */
+    @media (max-width: 680px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+      .about-portrait {
+        max-width: 300px;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- NAV -->
+<header class="site-header">
+  <a href="#top" class="site-logo">YardFlag</a>
+  <nav class="site-nav">
+    <a href="#live">Live</a>
+    <a href="#photos">Photos</a>
+    <a href="#about">About</a>
+    <a href="#contact" class="nav-cta">Listen</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section id="top" class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">YardFlag</h1>
+    <a href="#contact" class="hero-cta">Listen &nbsp;→</a>
+  </div>
+</section>
+
+<!-- LIVE -->
+<section id="live" class="section-live">
+  <div style="max-width:1180px; margin:0 auto;">
+    <div class="section-heading">
+      <span class="section-number">01</span>
+      <h2 class="section-title">Live</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="video-grid">
+      <figure class="video-figure">
+        <div class="video-wrap">
+          <video controls preload="metadata">
+            <source src="assets/For%20a%20Smoke%20-%20Rails%20End.mov">
+          </video>
+        </div>
+        <figcaption>Live at Rails End — <em>For a Smoke</em></figcaption>
+      </figure>
+      <figure class="video-figure">
+        <div class="video-wrap">
+          <video controls preload="metadata">
+            <source src="assets/Hello%20from%20the%20Floor%20-%20Rails%20End.mov">
+          </video>
+        </div>
+        <figcaption>Live at Rails End — <em>Hello from the Floor</em></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- PHOTOS -->
+<section id="photos" class="section-photos">
+  <div style="max-width:1180px; margin:0 auto;">
+    <div class="section-heading">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Photos</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="photo-grid">
+      <img src="assets/IMG_0704.jpeg" alt="" class="photo-img">
+      <img src="assets/IMG_5774.jpeg" alt="" class="photo-img">
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="section-about">
+  <div style="max-width:1180px; margin:0 auto;">
+    <div class="section-heading">
+      <span class="section-number">03</span>
+      <h2 class="section-title">About</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="about-grid">
+      <img src="assets/About%20Photo.jpeg" alt="Craig Draayer" class="about-portrait">
+      <div>
+        <p class="about-lead">YardFlag is Craig Draayer's solo project exploring themes of growth, loss, joy, and weirdness.</p>
+        <p class="about-body">The songs have been recorded plainly with Craig providing the acoustic and electric guitar, pedal steel, bass, and vocals recorded into a simple analog mixer, limiting the influence of technology on the work.</p>
+        <blockquote class="about-quote">"It may be cliche, but god it's nice to do things simply."</blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT / LISTEN -->
+<section id="contact" class="section-contact">
+  <div class="contact-inner">
+    <div class="contact-eyebrow">Stay in touch</div>
+    <h2 class="contact-heading">Get in touch</h2>
+    <a href="mailto:yardflagmusic@gmail.com" class="contact-email">yardflagmusic@gmail.com</a>
+
+    <div class="listen-divider">
+      <div class="listen-divider-line"></div>
+      <span class="listen-divider-label">Listen</span>
+      <div class="listen-divider-line"></div>
+    </div>
+
+    <div class="platform-links">
+      <a href="https://yardflag.bandcamp.com" target="_blank" rel="noopener" class="platform-link">Bandcamp</a>
+      <a href="#" class="platform-link dim">Spotify</a>
+      <a href="#" class="platform-link dim">Apple Music</a>
+      <a href="#" class="platform-link dim">YouTube</a>
+      <a href="#" class="platform-link dim">Instagram</a>
+    </div>
+
+    <p class="footer-copy">© 2026 YARDFLAG · INDEPENDENT</p>
+  </div>
+</section>
+
+</body>
+</html>
